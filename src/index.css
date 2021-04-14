@@ -1,0 +1,18 @@
+.ant-card-cover {
+  height: 71.7%;
+  min-height: 71.7%;
+}
+
+.ant-card-body {
+  height: 16%;
+}
+
+.ant-card-actions {
+  height: 12.3%;
+  display: flex;
+  align-items: center;
+}
+
+h1, h4, h6,p {
+  color: white;
+}
