@@ -118,7 +118,8 @@ const DetailMovie = () => {
           gutter={[25, 25]}
           style={{
             backgroundImage: 'linear-gradient(to right, rgba(8.24%, 11.76%, 13.33%, 1.00) 150px, rgba(8.24%, 11.76%, 13.33%, 0.84) 100%)',
-            padding: '20px'
+            padding: '20px',
+            width: '100%'
           }}
         >
           <Col
