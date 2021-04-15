@@ -1,4 +1,4 @@
-import { Form, Input, Button, notification } from "antd";
+import { Form, Input, Button, notification, Typography } from "antd";
 import { useContext } from "react";
 import { StoreContext } from "../store/StoreProvider";
 import { types } from "../store/storeReducer";
@@ -30,11 +30,11 @@ const Login = () => {
         localStorage.setItem('isLoggedIn', true)
       })
       .catch((err) =>
-      notification.error({
-        message: `Something is wrong, try again!`,
-        description: err.message,
-        placement: "bottomRight",
-      }))
+        notification.error({
+          message: `Something is wrong, try again!`,
+          description: err.message,
+          placement: "bottomRight",
+        }))
   }
   const onFinishFailed = () => {
     notification.error({
@@ -45,13 +45,16 @@ const Login = () => {
   const history = useHistory();
 
   return (
-    <section style={{ padding: '42px 24px' }}>
+    <section style={{ padding: '42px 24px', height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
       <Form
         form={form}
         name="login"
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         {...layout}
+        style={{
+          width: '100%',
+        }}
       >
         <Form.Item
           label="Email"

@@ -18,6 +18,7 @@ const DetailMovie = () => {
         setDetailMovie(data);
       })
   }, [id]);
+  console.log({detailMovie})
 
   const inputRef = useRef(null);
   const [inputComment, setInputComment] = useState('');

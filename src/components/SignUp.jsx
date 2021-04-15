@@ -8,6 +8,7 @@ import { useHistory } from "react-router";
 const SignUp = () => {
   const [store, dispatch] = useContext(StoreContext);
   const [form] = Form.useForm();
+  const history = useHistory();
   const layout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 12 },
@@ -15,7 +16,7 @@ const SignUp = () => {
   const tailLayout = {
     wrapperCol: { offset: 6, span: 16 },
   };
-  const onFinish = ({ email, password, firstName, lastName}) => {
+  const onFinish = ({ email, password, firstName, lastName }) => {
     auth.createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
         db.collection('users').doc(user.uid).set({
@@ -23,7 +24,7 @@ const SignUp = () => {
           lastName,
           email,
           favoritesMovies: [],
-      })
+        })
         dispatch({
           type: types.LOGIN,
           payload: {
@@ -34,6 +35,7 @@ const SignUp = () => {
             favoritesMovies: [],
           },
         })
+        history.push('/')
         localStorage.setItem('isLoggedIn', true)
       })
       .catch(err => console.log(err.message))
@@ -44,8 +46,7 @@ const SignUp = () => {
       placement: "bottomRight",
     });
   }
-  const history = useHistory();
-  
+
   return (
     <section style={{ padding: '42px 24px' }}>
       <Form
@@ -56,14 +57,14 @@ const SignUp = () => {
         {...layout}
       >
         <Form.Item
-          label="Firstname"
+          label="First name"
           name="firstName"
           rules={[{ required: true, message: "Please input your firstname!" }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label="Lastname"
+          label="Last name"
           name="lastName"
           rules={[{ required: true, message: "Please input your lastname!" }]}
         >
