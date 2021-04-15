@@ -16,7 +16,7 @@ function TopRatedMovies() {
   return (
     <Card>
       <Divider orientation="left" >Top rated</Divider>
-      <ListMoviesContainer movies={movies} />
+      <ListMoviesContainer movies={movies} stringKey="TopRatedMovies" />
     </Card>
   );
 };

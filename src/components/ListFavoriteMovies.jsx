@@ -9,7 +9,7 @@ function ListFavoriteMovies(props) {
   return (
     <Card>
       <Divider orientation="left">Favorites movies</Divider>
-      <ListMoviesContainer movies={user?.favoritesMovies} />
+      <ListMoviesContainer movies={user?.favoritesMovies} key='ListFavoriteMovies'/>
     </Card>
   );
 }

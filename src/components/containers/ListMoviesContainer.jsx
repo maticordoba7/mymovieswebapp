@@ -1,21 +1,24 @@
 import React, { useContext } from 'react';
-import { Card, Col, notification, Row } from 'antd';
+import { Badge, Card, notification } from 'antd';
 import { StoreContext } from '../../store/StoreProvider';
-import { types } from '../../store/storeReducer';
 import { StarFilled, EyeOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
-import { db } from '../../firebase';
+import { db, moviesCollection, usersCollection, increment, decrement } from '../../firebase';
 
-
-function ListMoviesContainer({ movies }) {
+function ListMoviesContainer({ movies, favoritesByUsers, stringKey }) {
   const [store, dispatch] = useContext(StoreContext);
   const history = useHistory();
   const { user } = store;
+  if (favoritesByUsers) {
+    movies = movies.sort((a, b) => b.favoritesCount - a.favoritesCount).filter(a => a.favoritesCount !== 0)
+  }
   const handleAddToFavorite = async (movie, existInMyFavorites) => {
-    const userDocRef = await db.collection('users').doc(user.uid);
+    delete movie.favoritesCount;
+    const batch = db.batch()
+    const userDocRef = await usersCollection.doc(user.uid);
     const userRef = await userDocRef.get()
     const userData = await userRef.data();
-    console.log({ userData, existInMyFavorites })
+    const movieCollection = moviesCollection.doc(movie.id.toString())
     existInMyFavorites ?
       userDocRef.set({ ...userData, favoritesMovies: userData.favoritesMovies.filter(m => m.id !== movie.id) })
       :
@@ -29,15 +32,12 @@ function ListMoviesContainer({ movies }) {
           'This movie was add to favorites',
       placement: "bottonRight",
     })
+    batch.set(movieCollection, { movie: { ...movie }, favoritesCount: existInMyFavorites ? decrement : increment }, { merge: true });
+    return batch.commit()
   };
   const handleSeeDetailMovie = movie => {
-    dispatch({
-      type: types.SEE_DETAIL_MOVIE,
-      payload: movie,
-    });
     history.push(`/detailmovie/${movie.id}`)
   }
-  console.log({ movies })
   return (
     <div style={{ display: 'flex', overflowX: "scroll" }}>
       {movies && movies.map(movie => {
@@ -45,6 +45,7 @@ function ListMoviesContainer({ movies }) {
         const existInMyFavorites = user?.favoritesMovies?.find(movieFav => movieFav.id === movie.id);
         return (
           <Card
+            key={`${id}${stringKey}`}
             hoverable
             style={{
               width: '170px',
@@ -56,20 +57,25 @@ function ListMoviesContainer({ movies }) {
               margin: '20px 10px',
             }}
             cover={
-              <img
-                alt="poster"
-                src={`https://image.tmdb.org/t/p/w220_and_h330_face${poster_path}`}
-                style={{
-                  height: '225px',
-                  maxHeight: '225px',
-                  minHeight: '225px',
-                  width: '150px',
-                  minWidth: '150px',
-                  maxWidth: '150px',
-                  borderRadius: '10px'
+              <>
+                <img
+                  alt="poster"
+                  src={`https://image.tmdb.org/t/p/w220_and_h330_face${poster_path}`}
+                  style={{
+                    height: '225px',
+                    maxHeight: '225px',
+                    minHeight: '225px',
+                    width: '150px',
+                    minWidth: '150px',
+                    maxWidth: '150px',
+                    borderRadius: '10px'
 
-                }}
-              />
+                  }}
+                />
+                {favoritesByUsers ?
+                  <Badge count={movie.favoritesCount} showZero /> : null
+                }
+              </>
             }
             actions={[
               <EyeOutlined

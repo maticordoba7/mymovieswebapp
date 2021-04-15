@@ -2,7 +2,7 @@ import { Form, Input, Button, notification } from "antd";
 import { useContext } from "react";
 import { StoreContext } from "../store/StoreProvider";
 import { types } from "../store/storeReducer";
-import { auth, db } from "../firebase";
+import { auth, db, usersCollection } from "../firebase";
 import { useHistory } from "react-router";
 
 const SignUp = () => {
@@ -19,7 +19,7 @@ const SignUp = () => {
   const onFinish = ({ email, password, firstName, lastName }) => {
     auth.createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
-        db.collection('users').doc(user.uid).set({
+        usersCollection.doc(user.uid).set({
           firstName,
           lastName,
           email,
