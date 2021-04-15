@@ -35,7 +35,7 @@ function ListMoviesContainer({ movies }) {
       type: types.SEE_DETAIL_MOVIE,
       payload: movie,
     });
-    history.push('/detailmovie')
+    history.push(`/detailmovie/${movie.id}`)
   }
   return (
     <Row gutter={[15, 15]} >

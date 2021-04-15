@@ -1,12 +1,24 @@
-import React, { useContext } from 'react';
-import { StoreContext } from '../store/StoreProvider';
+import { Card, Divider } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { getResultSearch } from '../api/apiCalls';
 import ListMoviesContainer from './containers/ListMoviesContainer';
 
 function SearchResults() {
-  const [store] = useContext(StoreContext);
-  const { searchResults } = store;
+  const { query } = useParams();
+  const [results, setResults] = useState([]);
+  useEffect(() => {
+    getResultSearch(query)
+      .then(({ data }) => {
+        setResults(data.results)
+      })
+  }, [query])
   return (
-    <ListMoviesContainer movies={searchResults} />
+    <Card>
+      <Divider orientation="left">Search results</Divider>
+      <ListMoviesContainer movies={results} />
+    </Card>
+
   );
 }
 

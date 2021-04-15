@@ -1,6 +1,6 @@
-import { Col, Comment, Image, PageHeader, Row, Tooltip, List, Button, Input, notification } from "antd";
+import { Col, Comment, Image, PageHeader, Row, Tooltip, List, Button, Input, notification, Typography } from "antd";
 import { useContext, useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { getMoreDetail } from "../api/apiCalls";
 import { StoreContext } from "../store/StoreProvider";
 import moment from 'moment';
@@ -9,16 +9,13 @@ import { db } from "../firebase";
 const DetailMovie = () => {
   const history = useHistory();
   const [store] = useContext(StoreContext);
-  const { detailMovie } = store;
-  const { title, release_date, overview, id } = detailMovie;
-  const [moreInfo, setMoreInfo] = useState(null)
-  if (Object.keys(detailMovie).length === 0) {
-    history.push('/')
-  }
+  const { id } = useParams();
+  const [detailMovie, setDetailMovie] = useState(null)
+  const { Title, Paragraph } = Typography;
   useEffect(() => {
     getMoreDetail(id)
       .then(({ data }) => {
-        setMoreInfo(data);
+        setDetailMovie(data);
       })
   }, [id]);
 
@@ -33,7 +30,6 @@ const DetailMovie = () => {
         .collection('comments')
         .onSnapshot(querySnapshot => {
           querySnapshot.docChanges().forEach((change) => {
-            console.log({ change: change.doc.data() })
             const firebaseComment = change.doc.data();
 
             setComments((prevState) => [...prevState,
@@ -41,7 +37,7 @@ const DetailMovie = () => {
               author: `${firebaseComment.firstName} ${firebaseComment.lastName}`,
               avatar: `https://ui-avatars.com/api/?name=${firebaseComment.firstName}+${firebaseComment.lastName}&background=random`,
               content: (
-                <p style={{color: 'black'}}>
+                <p style={{ color: 'black' }}>
                   {firebaseComment.content}
                 </p>
               ),
@@ -98,27 +94,26 @@ const DetailMovie = () => {
       elementEmpty.innerText = "No comments"
     }
   }, [])
-
   return (
     <>
       <PageHeader
         className="site-page-header"
         onBack={() => history.push('/')}
-        title={`${title} `}
-        subTitle={release_date ? `(${release_date.substr(0, 4)})` : ''}
+        title={`${detailMovie?.title} `}
+        subTitle={detailMovie?.release_date ? `(${detailMovie?.release_date.substr(0, 4)})` : ''}
       />
       <div style={{
         display: 'flex', justifyContent: 'center', paddingLeft: '16px 24px',
-        background: `url(https://image.tmdb.org/t/p/original${detailMovie ? detailMovie.poster_path : moreInfo.poster_path}) repeat`,
-        backgroundPosition: 'right -200px top',
+        backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${detailMovie?.backdrop_path})`,
         backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'right -200px top'
       }}>
         <Row
           gutter={[25, 25]}
           style={{
             backgroundImage: 'linear-gradient(to right, rgba(8.24%, 11.76%, 13.33%, 1.00) 150px, rgba(8.24%, 11.76%, 13.33%, 0.84) 100%)',
-            padding: '20px',
+            padding: '30px',
             width: '100%'
           }}
         >
@@ -131,10 +126,8 @@ const DetailMovie = () => {
             xxl={{ span: 8, offset: 0 }}
           >
             <Image
-              src={`https://image.tmdb.org/t/p/original${detailMovie?.poster_path ?
-                detailMovie.poster_path :
-                moreInfo ? moreInfo.poster_path : ''}`}
-
+              src={`https://image.tmdb.org/t/p/original${detailMovie?.poster_path}`}
+              style={{ width: '100%', height: '100%', borderRadius: '10px' }}
               width={'100%'}
               height={'100%'}
             />
@@ -148,10 +141,10 @@ const DetailMovie = () => {
             xxl={{ span: 14, offset: 0 }}
           >
             <div>
-              <h6>{moreInfo?.genres?.map(genre => genre.name).join(', ')} </h6>
-              <h4>{moreInfo?.tagline}</h4>
-              <h1 style={{ paddingTop: '25px' }}>Overview</h1>
-              <p>{moreInfo ? moreInfo.overview : overview}</p>
+              <Title level={5}>{detailMovie?.genres?.map(genre => genre.name).join(', ')} </Title>
+              <Title level={3}>{detailMovie?.tagline}</Title>
+              <Title level={3}>Overview</Title>
+              <Paragraph>{detailMovie?.overview}</Paragraph>
             </div>
             <Button
               style={{ position: 'absolute', bottom: '0', right: '0' }}
