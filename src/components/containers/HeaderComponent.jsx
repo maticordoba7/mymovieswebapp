@@ -1,31 +1,21 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Button, Input, Layout, Menu } from 'antd';
 import { StoreContext } from '../../store/StoreProvider';
 import { useHistory } from 'react-router';
-import { getResultSearch } from '../../api/apiCalls';
 import { types } from '../../store/storeReducer';
 import { auth } from '../../firebase';
 
 
-function HeaderComponent(props) {
+function HeaderComponent() {
   const history = useHistory();
   const { Header } = Layout;
   const [store, dispatch] = useContext(StoreContext);
   const { user } = store;
-  const [loading, setLoading] = useState(false);
-  const onSearch = (query) => {
-    setLoading(true)
-    getResultSearch(query)
-      .then(({ data }) => {
-        console.log(data)
-        dispatch({
-          type: types.SET_SEARCH_RESULTS,
-          payload: data.results
-        })
-        history.push('/searchResults')
-        setLoading(false)
-      })
-      .catch((err) => setLoading(false))
+  const onSearch = (query, event) => {
+    history.push(`/search/${query}`)
+    console.log(event)
+    event.target.value =" "
+
   }
   const handleLogout = () => {
     auth.signOut()
@@ -51,7 +41,6 @@ function HeaderComponent(props) {
       <div style={{ alignSelf: 'center' }}>
         <div style={{ display: 'flex', alignContent: 'center' }}>
           <Input.Search
-            loading={loading}
             placeholder="Search movie"
             allowClear
             enterButton="Search"

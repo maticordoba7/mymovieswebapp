@@ -53,10 +53,10 @@ function ContentComponent(props) {
         <Route exacth path={`${path}favorites`}>
           <ListFavoriteMovies />
         </Route>
-        <Route exacth path={`${path}searchresults`}>
+        <Route exacth path={`${path}search/:query`}>
           <SearchResults />
         </Route>
-        <Route exacth path={`${path}detailmovie`}>
+        <Route exacth path={`${path}detailmovie/:id`}>
           <DetailMovie />
         </Route>
       </Switch>

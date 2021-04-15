@@ -35,52 +35,68 @@ function ListMoviesContainer({ movies }) {
       type: types.SEE_DETAIL_MOVIE,
       payload: movie,
     });
-    history.push('/detailmovie')
+    history.push(`/detailmovie/${movie.id}`)
   }
+  console.log({ movies })
   return (
-    <Row gutter={[15, 15]} >
+    <div style={{ display: 'flex', overflowX: "scroll" }}>
       {movies && movies.map(movie => {
         const { id, title, poster_path } = movie;
         const existInMyFavorites = user?.favoritesMovies?.find(movieFav => movieFav.id === movie.id);
         return (
-          <Col key={id} xs={24} sm={12} md={6} lg={6} xl={4} xxl={4} >
-            <Card
-              style={{ height: '100%' }}
-              hoverable
-              cover={
-                <img
-                  alt="poster"
-                  src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-                  style={{ height: '100%' }}
-                />
-              }
-              actions={[
-                <EyeOutlined
-                  onClick={() => {
-                    handleSeeDetailMovie(movie)
-                  }}
-                />,
-                <StarFilled
-                  style={{ color: existInMyFavorites ? '#dbdb12' : 'black' }}
-                  onClick={() => {
-                    handleAddToFavorite(movie, existInMyFavorites)
-                  }} />,
-              ]}
-            >
-              <Card.Meta title={`${title}`} />
+          <Card
+            hoverable
+            style={{
+              width: '170px',
+              minWidth: '170px',
+              maxWidth: '170px',
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              margin: '20px 10px',
+            }}
+            cover={
+              <img
+                alt="poster"
+                src={`https://image.tmdb.org/t/p/w220_and_h330_face${poster_path}`}
+                style={{
+                  height: '225px',
+                  maxHeight: '225px',
+                  minHeight: '225px',
+                  width: '150px',
+                  minWidth: '150px',
+                  maxWidth: '150px',
+                  borderRadius: '10px'
 
-              {/* <Button onClick={() => {
+                }}
+              />
+            }
+            actions={[
+              <EyeOutlined
+                onClick={() => {
+                  handleSeeDetailMovie(movie)
+                }}
+              />,
+              <StarFilled
+                style={{ color: existInMyFavorites ? '#dbdb12' : 'black' }}
+                onClick={() => {
+                  handleAddToFavorite(movie, existInMyFavorites)
+                }} />,
+            ]}
+          >
+            <Card.Meta title={`${title}`} />
+
+            {/* <Button onClick={() => {
                 handleAddToFavorite(movie, existInMyFavorites)
               }}
                 style={{ width: '100%' }}
               >
                 {existInMyFavorites ? 'Delete favorite' : 'Add favorite'}
               </Button> */}
-            </Card>
-          </Col>
+          </Card>
         )
       })}
-    </Row>
+    </div >
   );
 }
 
