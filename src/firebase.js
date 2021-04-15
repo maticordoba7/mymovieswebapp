@@ -20,5 +20,9 @@ const configFirebase = {
 const fb = firebase.initializeApp(configFirebase);
 const auth = fb.auth();
 const db = firebase.firestore();
-export { fb, auth, db };
+const usersCollection = db.collection('users');
+const moviesCollection = db.collection('movies');
+const increment = firebase.firestore.FieldValue.increment(1);
+const decrement = firebase.firestore.FieldValue.increment(-1);
 
+export { fb, auth, db, usersCollection, moviesCollection, increment, decrement };

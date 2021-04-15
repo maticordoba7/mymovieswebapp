@@ -16,7 +16,7 @@ function ListPopularMovies() {
   return (
     <Card >
       <Divider orientation="left">Popular Movies</Divider>
-      <ListMoviesContainer movies={popularMovies} />
+      <ListMoviesContainer movies={popularMovies} stringKey="ListPopularMovies" />
     </Card>
   );
 };

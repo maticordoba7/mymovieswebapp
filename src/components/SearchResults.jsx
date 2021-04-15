@@ -16,7 +16,7 @@ function SearchResults() {
   return (
     <Card>
       <Divider orientation="left">Search results</Divider>
-      <ListMoviesContainer movies={results} />
+      <ListMoviesContainer movies={results} stringKey="SearchResults"/>
     </Card>
 
   );

@@ -47,3 +47,5 @@ h1, h4, h6, p {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.ant-badge {}

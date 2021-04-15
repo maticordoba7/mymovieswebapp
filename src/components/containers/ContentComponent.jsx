@@ -6,9 +6,12 @@ import { Route, Switch, useRouteMatch } from 'react-router';
 import ListFavoriteMovies from '../ListFavoriteMovies';
 import SearchResults from '../SearchResults';
 import DetailMovie from '../DetailMovie';
-import { auth, db } from '../../firebase';
+import { auth, db, usersCollection } from '../../firebase';
 import { StoreContext } from '../../store/StoreProvider';
 import { types } from '../../store/storeReducer';
+import FavoritesByUsers from '../FavoritesByUser';
+import UpcomingMovies from '../UpcomingMovies';
+import NowPlayingMovies from '../NowPlayingMovies';
 
 function ContentComponent(props) {
   const { Content } = Layout;
@@ -16,7 +19,7 @@ function ContentComponent(props) {
   const [store, dispatch] = useContext(StoreContext);
   const getData = async () => {
     if (store.user !== null) {
-      await db.collection('users')
+      await usersCollection
         .doc(store.user.uid)
         .onSnapshot(querySnapshot => {
           console.log('get data')
@@ -48,6 +51,9 @@ function ContentComponent(props) {
           <>
             <ListPopularMovies />
             <TopRatedMovies />
+            {/* <FavoritesByUsers /> */}
+            <UpcomingMovies />
+            <NowPlayingMovies />
           </>
         </Route>
         <Route exacth path={`${path}favorites`}>

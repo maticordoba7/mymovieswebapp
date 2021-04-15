@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router";
 import { getMoreDetail } from "../api/apiCalls";
 import { StoreContext } from "../store/StoreProvider";
 import moment from 'moment';
-import { db } from "../firebase";
+import { db, moviesCollection } from "../firebase";
 
 const DetailMovie = () => {
   const history = useHistory();
@@ -18,7 +18,7 @@ const DetailMovie = () => {
         setDetailMovie(data);
       })
   }, [id]);
-  console.log({detailMovie})
+  console.log({ detailMovie })
 
   const inputRef = useRef(null);
   const [inputComment, setInputComment] = useState('');
@@ -26,13 +26,13 @@ const DetailMovie = () => {
 
   const getData = async () => {
     if (store.user !== null) {
-      await db.collection('moviesComments')
+      await moviesCollection
         .doc(id.toString())
         .collection('comments')
         .onSnapshot(querySnapshot => {
           querySnapshot.docChanges().forEach((change) => {
             const firebaseComment = change.doc.data();
-
+            console.log({firebaseComment})
             setComments((prevState) => [...prevState,
             {
               author: `${firebaseComment.firstName} ${firebaseComment.lastName}`,
@@ -74,7 +74,7 @@ const DetailMovie = () => {
       content: inputComment,
       datatime: new Date(),
     };
-    db.collection('moviesComments')
+    moviesCollection
       .doc(id.toString())
       .collection('comments')
       .doc()
