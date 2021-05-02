@@ -7,11 +7,13 @@ import FooterComponent from './containers/FooterComponent';
 
 function ProtectedRoutes() {
   return (
-    <Layout theme="light" className="layout">
+    <>
       <HeaderComponent />
-      <ContentComponent />
+      <Layout theme="light" className="layout">
+        <ContentComponent />
+      </Layout>
       <FooterComponent />
-    </Layout>
+    </>
   );
 }
 
